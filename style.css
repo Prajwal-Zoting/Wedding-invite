@@ -77,3 +77,51 @@ body{background:#f8efdd}
 .scene-couple > .section-kicker {
   display: none;
 }
+
+/* FIX: Celebration text colors on the light cream background */
+
+/* Join us for / Venue heading */
+.merged-celebration h2,
+.merged-celebration .venue-block h3 {
+  color: #6a1728 !important;
+}
+
+/* Script text: our special day */
+.merged-celebration h2 em {
+  color: #a83c50 !important;
+}
+
+/* Date card */
+.merged-celebration .date-number {
+  color: #6a1728 !important;
+}
+
+.merged-celebration .date-month,
+.merged-celebration .date-year,
+.merged-celebration .time-label {
+  color: #a87928 !important;
+}
+
+.merged-celebration .time-value {
+  color: #a83c50 !important;
+}
+
+.merged-celebration .time-note {
+  color: #80616b !important;
+}
+
+/* Venue address */
+.merged-celebration .venue-block > p:not(.eyebrow) {
+  color: #80616b !important;
+}
+
+/* View map button */
+.merged-celebration .outline-button {
+  color: #6a1728 !important;
+  border-color: #bd8b35 !important;
+}
+
+.merged-celebration .outline-button span {
+  color: #a83c50 !important;
+}
+
