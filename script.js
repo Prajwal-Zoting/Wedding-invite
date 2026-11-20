@@ -3,165 +3,120 @@
 // PALLAVI & VISHAL - WEDDING INVITATION
 // ==========================================
 
-// 1. Scene navigation and progress indicators
+
+// 1. SCENE NAVIGATION AND PROGRESS INDICATORS
 
 const scenes = [...document.querySelectorAll(".scene")];
 const dots = [...document.querySelectorAll(".progress-dot")];
-const current = document.getElementById("currentScene");
 
 const observer = new IntersectionObserver(
-    entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting && entry.intersectionRatio > 0.48) {
-                const i = scenes.indexOf(entry.target);
+  entries => {
+    entries.forEach(entry => {
 
-                if (i >= 0) {
-                    if (current) {
-                        current.textContent = String(i + 1).padStart(2, "0");
-                    }
+      if (entry.isIntersecting && entry.intersectionRatio > 0.48) {
 
-                    dots.forEach((dot, index) => {
-                        dot.classList.toggle("active", index === i);
-                    });
+        const index = scenes.indexOf(entry.target);
 
-                    entry.target.classList.add("in-view");
-                }
-            }
-        });
-    },
-    {
-        threshold: [0.48, 0.65]
-    }
+        if (index >= 0) {
+
+          // Update active navigation dot
+          dots.forEach((dot, i) => {
+            dot.classList.toggle("active", i === index);
+          });
+
+          // Trigger scene reveal animation
+          entry.target.classList.add("in-view");
+        }
+      }
+
+    });
+  },
+  {
+    threshold: [0.48, 0.65]
+  }
 );
 
-scenes.forEach(scene => observer.observe(scene));
+
+// Observe all scenes
+scenes.forEach(scene => {
+  observer.observe(scene);
+});
 
 
-// ==========================================
-// 2. WEDDING MUSIC PLAYER
-// ==========================================
+// 2. WEDDING MUSIC - AUTOMATIC PLAYBACK
 
-// IMPORTANT:
-// Keep song.mp3 in the same folder as index.html.
+const weddingSong = document.getElementById("weddingSong");
 
-const sound = document.getElementById("soundToggle");
-const song = document.getElementById("weddingSong");
+if (weddingSong) {
 
-let musicPlaying = false;
+  weddingSong.loop = true;
+  weddingSong.volume = 0.7;
 
-// Update music button text
+  let musicStarted = false;
 
-function updateMusicButton() {
-    if (!sound) return;
+  const startMusic = async () => {
 
-    if (musicPlaying) {
-        sound.innerHTML = '♫ <span>Music on</span>';
-        sound.setAttribute("aria-label", "Pause wedding music");
-    } else {
-        sound.innerHTML = '♫ <span>Music off</span>';
-        sound.setAttribute("aria-label", "Play wedding music");
-    }
-}
-
-
-// Play the actual MP3 file
-
-async function playWeddingMusic() {
-    if (!song) {
-        console.error("Wedding audio element not found.");
-        return;
-    }
+    if (musicStarted) return;
 
     try {
-        // Set the correct audio file
-        song.src = "./song.mp3";
 
-        song.loop = true;
-        song.volume = 0.7;
+      await weddingSong.play();
 
-        // Play after visitor interaction
-        await song.play();
+      musicStarted = true;
 
-        musicPlaying = true;
-        updateMusicButton();
+      // Remove fallback listeners after successful playback
+      document.removeEventListener("pointerdown", startMusic);
+      document.removeEventListener("keydown", startMusic);
+      document.removeEventListener("touchstart", startMusic);
 
     } catch (error) {
-        musicPlaying = false;
-        updateMusicButton();
 
-        console.error("Unable to play wedding music:", error);
+      // Autoplay may be blocked by the browser.
+      // Music will retry on the visitor's first interaction.
+
     }
+
+  };
+
+
+  // Attempt autoplay when the website loads
+  startMusic();
+
+
+  // Fallback: start music on first visitor interaction
+  document.addEventListener("pointerdown", startMusic);
+  document.addEventListener("keydown", startMusic);
+  document.addEventListener("touchstart", startMusic);
+
 }
 
 
-// Pause the wedding music
-
-function pauseWeddingMusic() {
-    if (!song) return;
-
-    song.pause();
-
-    musicPlaying = false;
-    updateMusicButton();
-}
-
-
-// Music toggle button
-
-if (sound && song) {
-
-    updateMusicButton();
-
-    sound.addEventListener("click", async () => {
-
-        if (musicPlaying && !song.paused) {
-            pauseWeddingMusic();
-        } else {
-            await playWeddingMusic();
-        }
-
-    });
-
-    // Keep button status synchronized
-    song.addEventListener("play", () => {
-        musicPlaying = true;
-        updateMusicButton();
-    });
-
-    song.addEventListener("pause", () => {
-        musicPlaying = false;
-        updateMusicButton();
-    });
-
-    song.addEventListener("error", () => {
-        console.error(
-            "Could not load song.mp3. Check that it exists beside index.html."
-        );
-    });
-}
-
-
-// ==========================================
 // 3. SMOOTH PAGE NAVIGATION
-// ==========================================
 
 document.querySelectorAll('a[href^="#"]').forEach(link => {
 
-    link.addEventListener("click", event => {
+  link.addEventListener("click", event => {
 
-        const target = document.querySelector(
-            link.getAttribute("href")
-        );
+    const target = document.querySelector(
+      link.getAttribute("href")
+    );
 
-        if (target) {
-            event.preventDefault();
+    if (target) {
 
-            target.scrollIntoView({
-                behavior: "smooth",
-                block: "start"
-            });
-        }
+      event.preventDefault();
 
-    });
+      target.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+
+    }
+
+  });
 
 });
+
+
+// ==========================================
+// END OF WEDDING INVITATION SCRIPT
+// ==========================================
