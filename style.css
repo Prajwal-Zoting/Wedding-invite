@@ -64,3 +64,16 @@ body{background:#f8efdd}
   .couple-art-wrap{width:min(68vw,270px);height:auto;margin:0 auto 12px}
   .couple-art{width:100%;height:auto}
 }
+
+/* Keep the VP monogram at its intended size */
+.brand img {
+  display: block;
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+}
+
+/* Prevent the couple section heading from overlapping */
+.scene-couple > .section-kicker {
+  display: none;
+}
